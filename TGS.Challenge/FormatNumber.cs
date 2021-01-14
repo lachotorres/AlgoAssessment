@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace TGS.Challenge
 {
@@ -24,9 +25,32 @@ namespace TGS.Challenge
      */
     public class FormatNumber
     {
+        private static StringBuilder _number = null;
+       
+
         public string Format(int value)
         {
-            return string.Empty;
+            if (value < 0 || value > 1000000000) throw new ArgumentOutOfRangeException();
+            _number = new StringBuilder();
+            GetChunk(value.ToString());
+            return _number.ToString();
         }
+
+        private string GetChunk(string str)
+        {
+            const int chunckSize = 3;
+
+            if (str.Length <= chunckSize)
+            {
+                _number.Insert(0, str);
+                return str;
+            }
+            var chunk = str.Substring(str.Length - chunckSize, chunckSize);
+            _number.Insert(0, "," + chunk);
+            var remainder = str.Substring(0, str.Length - chunckSize);
+
+            return GetChunk(str.Substring(0, str.Length - chunckSize));
+        }
+
     }
 }
